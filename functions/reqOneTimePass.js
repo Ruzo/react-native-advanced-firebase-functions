@@ -1,9 +1,10 @@
+const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const twilio = require('twilio');
 
 const db = admin.database();
 const ref = db.ref('users');
-const twilioClient = new twilio(process.env.ACCOUNTSID, process.env.AUTHTOKEN);
+const twilioClient = new twilio(functions.config().twilio.id, functions.config().twilio.token);
 
 module.exports = function(req, res) {
   if(!req.body.phone)return res.status(422).send({error: 'No phone number provided!'});
