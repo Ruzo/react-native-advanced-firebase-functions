@@ -6,11 +6,15 @@ module.exports = function(req, res){
   } else {
     const phone = String(req.body.phone).replace(/[^\d]/g, "");
     if (phone) {
-      admin.auth().createUser({
-        uid: phone
-      })
-      .then(user => res.status(200).send(user))
-      .catch(error => res.status(422).send({ error }));
+      admin.auth().getUser(phone)
+        .then(user => res.status(200).send(user))
+        .catch(() => {
+          admin.auth().createUser({
+            uid: phone
+          })
+          .then(user => res.status(200).send(user))
+          .catch(error => res.status(422).send({ error }));
+        });
     } else {
       res.status(422).send({error: "Phone number is invalid!"});
     }
